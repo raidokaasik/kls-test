@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../../types";
 
-export interface IUserState {
+interface IUserState {
 	searchTerm: string;
 	users: User[];
 	selectedUsers: number[];
@@ -14,23 +14,26 @@ const initialState: IUserState = {
 };
 
 export const userSlice = createSlice({
-	name: "userReducer",
+	name: "users",
 	initialState,
 	reducers: {
-		setUsers: (state, action) => {
+		setUsers: (state, action: PayloadAction<User[]>) => {
 			state.users = action.payload;
 		},
-		setSearchTerm: (state, action) => {
-			state.searchTerm = state.searchTerm.concat(action.payload);
+		filterUsersBySearch: (state, action: PayloadAction<string>) => {
+			state.searchTerm = action.payload;
+			state.users = state.users.filter((user: User) =>
+				user.name.includes(action.payload)
+			);
 		},
-		selectUser: (state, action) => {
-			const selectedId: number = action.payload;
+		selectUser: (state, action: PayloadAction<number>) => {
+			const selectedId = action.payload;
 			if (!state.selectedUsers.includes(selectedId)) {
 				state.selectedUsers.push(selectedId);
 			}
 		},
-		deselectUser: (state, action) => {
-			const selectedId: number = action.payload;
+		deselectUser: (state, action: PayloadAction<number>) => {
+			const selectedId = action.payload;
 			if (state.selectedUsers.includes(selectedId)) {
 				state.selectedUsers = state.selectedUsers.filter(
 					(id: number) => id !== selectedId
@@ -49,7 +52,7 @@ export const userSlice = createSlice({
 });
 
 export const {
-	setSearchTerm,
+	filterUsersBySearch,
 	setUsers,
 	selectUser,
 	deselectUser,
