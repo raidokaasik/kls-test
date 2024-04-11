@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../redux/hooks";
 import { setUsers } from "../redux/features/users/userSlice";
 import { getUsers } from "../mock/services/getUsers";
-import { User } from "../types";
 import { UserPageWrapper } from "../feature/users/UserPageWrapper";
 import { UserList } from "../feature/users/UserList";
+import { PageHeader } from "../feature/users/PageHeader";
 
 export const UserPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		getUsers().then((users: User[]) => {
+		getUsers().then((users) => {
 			if (users) {
 				dispatch(setUsers(users));
 			}
@@ -19,9 +19,8 @@ export const UserPage = () => {
 
 	return (
 		<UserPageWrapper>
-			<div style={{ height: "624px", width: "684px", background: "#fff" }}>
-				<UserList />
-			</div>
+			<PageHeader />
+			<UserList />
 		</UserPageWrapper>
 	);
 };
