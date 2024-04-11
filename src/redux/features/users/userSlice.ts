@@ -1,44 +1,54 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../../types";
 
+type Sort = "ascended" | "descended";
+
 interface IUserState {
 	searchTerm: string;
 	users: User[];
 	selectedUsers: number[];
+	sort: {
+		byRole: Sort | "";
+	};
 }
 
 const initialState: IUserState = {
 	searchTerm: "",
 	users: [],
 	selectedUsers: [],
+	sort: {
+		byRole: "",
+	},
 };
 
 export const userSlice = createSlice({
-	name: "users",
+	name: "userReducer",
 	initialState,
 	reducers: {
 		setUsers: (state, action: PayloadAction<User[]>) => {
 			state.users = action.payload;
 		},
-		filterUsersBySearch: (state, action: PayloadAction<string>) => {
-			state.searchTerm = action.payload;
-			state.users = state.users.filter((user: User) =>
-				user.name.includes(action.payload)
-			);
+		setSearchBy: (state, action: PayloadAction<string>) => {
+			state.searchTerm = action.payload.toLowerCase();
 		},
 		selectUser: (state, action: PayloadAction<number>) => {
-			const selectedId = action.payload;
-			if (!state.selectedUsers.includes(selectedId)) {
-				state.selectedUsers.push(selectedId);
-			}
-		},
-		deselectUser: (state, action: PayloadAction<number>) => {
 			const selectedId = action.payload;
 			if (state.selectedUsers.includes(selectedId)) {
 				state.selectedUsers = state.selectedUsers.filter(
 					(id: number) => id !== selectedId
 				);
+			} else {
+				state.selectedUsers.push(selectedId);
 			}
+		},
+		selectAllUsers: (state) => {
+			state.selectedUsers = state.users.map((user: User) => user.id);
+		},
+		deselectAllUsers: (state) => {
+			state.selectedUsers = [];
+		},
+		sortByRole: (state, action: PayloadAction<Sort>) => {
+			console.log("sort action::", action);
 		},
 		deleteSelectedUsers: (state) => {
 			if (state.selectedUsers.length > 0) {
@@ -52,10 +62,11 @@ export const userSlice = createSlice({
 });
 
 export const {
-	filterUsersBySearch,
+	setSearchBy,
 	setUsers,
 	selectUser,
-	deselectUser,
 	deleteSelectedUsers,
+	selectAllUsers,
+	deselectAllUsers,
 } = userSlice.actions;
 export default userSlice.reducer;
