@@ -47,9 +47,6 @@ export const userSlice = createSlice({
 		deselectAllUsers: (state) => {
 			state.selectedUsers = [];
 		},
-		sortByRole: (state, action: PayloadAction<Sort>) => {
-			console.log("sort action::", action);
-		},
 		deleteSelectedUsers: (state) => {
 			if (state.selectedUsers.length > 0) {
 				state.users = state.users.filter(
