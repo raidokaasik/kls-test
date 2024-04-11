@@ -8,10 +8,12 @@ export const UserPageWrapper = ({ children }: UserContainerProps) => {
 	return <Wrapper>{children}</Wrapper>;
 };
 
-const Wrapper = styled.div({
-	width: "780px",
-	height: "848px",
-	background: "#EDF2F7",
-	overflow: "auto",
-	padding: "32px",
+const Wrapper = styled.div(({ theme: { palette } }) => {
+	return {
+		width: "780px",
+		height: "848px",
+		background: palette.background.usersContainer,
+		overflow: "auto",
+		padding: "32px",
+	};
 });
