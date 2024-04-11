@@ -1,26 +1,24 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { selectUser, deselectUser } from "../../redux/features/users/userSlice";
+import { selectUser } from "../../redux/features/users/userSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 export const UserRow = ({ style, user }: any) => {
-	const dispatch = useDispatch();
-	const [selected, setSelected] = useState<boolean>(false);
+	const dispatch = useAppDispatch();
+	const selectedUsers = useAppSelector(
+		(state) => state.userState.selectedUsers
+	);
 
-	function handleCheckBox(e: any) {
-		const checked = e.target.checked;
-		setSelected(checked);
-		if (checked) {
-			dispatch(selectUser(user.id));
-		} else {
-			dispatch(deselectUser(user.id));
-		}
-	}
+	const isSelected = selectedUsers.includes(user.id);
 
 	return (
 		<div style={{ ...style, display: "inline-flex" }} key={user.id}>
-			<input type="checkbox" onChange={handleCheckBox} />
+			<input
+				type="checkbox"
+				checked={isSelected}
+				id={`selectUser_${user.id}`}
+				onChange={() => dispatch(selectUser(user.id))}
+			/>
 			<div>
-				<p style={{ color: selected ? "blue" : "black" }}>{user.name}</p>
+				<p style={{ color: isSelected ? "blue" : "black" }}>{user.name}</p>
 				<p>{user.email}</p>
 			</div>
 			<p>{user.role}</p>

@@ -1,28 +1,44 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { FixedSizeList as List } from "react-window";
 import styled from "styled-components";
-import { ListHeader } from "./ListHeader";
 import { UserRow } from "./UserRow";
+import { ActionSection } from "./ActionSection";
+import { filteredUsers } from "./utils";
+import { LabelSection } from "./LabelSection";
+
+const LIST_HEIGHT = 624;
+const LIST_WIDTH = 684;
+const ROW_HEIGHT = 64;
 
 export const UserList = () => {
-	const users = useSelector((state: any) => state.userState.users);
+	const { users, searchTerm } = useAppSelector((state) => state.userState);
+	const usersFound = filteredUsers(users, searchTerm);
+
 	return (
 		<ListContainer>
-			<ListHeader />
-			<List height={624} itemCount={users.length} itemSize={64} width={684}>
+			<ActionSection />
+			<LabelSection />
+			<List
+				height={LIST_HEIGHT}
+				itemCount={usersFound.length}
+				itemSize={ROW_HEIGHT}
+				width={LIST_WIDTH}
+			>
 				{({ index, style }) => {
-					return <UserRow index={index} style={style} user={users[index]} />;
+					return (
+						<UserRow index={index} style={style} user={usersFound[index]} />
+					);
 				}}
 			</List>
 		</ListContainer>
 	);
 };
 
-const ListContainer = styled.div(({ theme }) => ({
+const ListContainer = styled.div(({ theme: { palette } }) => ({
 	height: "726px",
 	width: "716px",
-	padding: "16px",
-	background: theme.white,
+	padding: "24px 16px 16px 16px",
+	background: palette.common.white,
 	margin: "auto",
 	borderRadius: "8px",
 }));
