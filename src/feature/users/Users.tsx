@@ -26,7 +26,7 @@ export const Users = () => {
 
 	return (
 		<ListContainer>
-			<ActionSection count={usersFound.length} />
+			<ActionSection />
 			<LabelSection />
 			<List
 				itemData={usersFound}

@@ -7,8 +7,7 @@ const nUsersSelected = (count: number) => {
 	return `${count} ${count === 1 ? "user" : "users"} selected`;
 };
 
-export const ActionSection = ({ count }: any) => {
-	console.log("COUNT::", count);
+export const ActionSection = () => {
 	const dispatch = useAppDispatch();
 	const selectedUsersCount = useAppSelector(
 		(state) => state.userState.selectedUsers.length
