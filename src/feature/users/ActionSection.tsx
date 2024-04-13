@@ -1,23 +1,31 @@
 import { deleteSelectedUsers } from "../../redux/features/users/userSlice";
 import { styled } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { ActionButton } from "../../components/ActionButton";
+
+const nUsersSelected = (count: number) => {
+	return `${count} ${count === 1 ? "user" : "users"} selected`;
+};
 
 export const ActionSection = () => {
 	const dispatch = useAppDispatch();
 	const selectedUsersCount = useAppSelector(
 		(state) => state.userState.selectedUsers.length
 	);
+	const selectedUsersP = nUsersSelected(selectedUsersCount);
+
 	return (
 		<ActionSectionContainer>
-			<p style={{ marginRight: "25px" }}>{selectedUsersCount} users selected</p>
-			<button>Edit</button>
-			<button
-				onClick={() => {
-					dispatch(deleteSelectedUsers());
-				}}
-			>
-				Delete
-			</button>
+			<SelectedUsersParagraph>{selectedUsersP}</SelectedUsersParagraph>
+			<ButtonBox>
+				<ActionButton variant="edit" />
+				<ActionButton
+					variant="delete"
+					onClick={() => {
+						dispatch(deleteSelectedUsers());
+					}}
+				/>
+			</ButtonBox>
 		</ActionSectionContainer>
 	);
 };
@@ -27,5 +35,20 @@ const ActionSectionContainer = styled.div(({}) => ({
 	height: "32px",
 	background: "#fff",
 	display: "inline-flex",
+	alignItems: "center",
 	marginBottom: "24px",
 }));
+
+const ButtonBox = styled.div(() => ({
+	display: "inline-flex",
+	gap: "8px",
+}));
+
+const SelectedUsersParagraph = styled.p(
+	({ theme: { palette, typography } }) => ({
+		marginRight: "25px",
+		display: "inline-block",
+		color: palette.paragraph.subheader,
+		fontWeight: typography.weight.medium,
+	})
+);

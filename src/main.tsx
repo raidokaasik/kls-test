@@ -7,7 +7,10 @@ import { GlobalStyle } from "./theme/index.ts";
 
 async function initServiceWorker() {
 	const { serviceWorker } = await import("./mock/serviceWorker.ts");
-	return serviceWorker.start({ onUnhandledRequest: "bypass" });
+	return serviceWorker.start({
+		onUnhandledRequest: "bypass",
+		quiet: true,
+	});
 }
 
 async function bootstrapApp() {

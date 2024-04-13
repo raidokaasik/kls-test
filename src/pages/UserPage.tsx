@@ -3,7 +3,7 @@ import { useAppDispatch } from "../redux/hooks";
 import { setUsers } from "../redux/features/users/userSlice";
 import { getUsers } from "../mock/services/getUsers";
 import { UserPageWrapper } from "../feature/users/UserPageWrapper";
-import { UserList } from "../feature/users/UserList";
+import { Users } from "../feature/users/Users";
 import { PageHeader } from "../feature/users/PageHeader";
 
 export const UserPage = () => {
@@ -20,7 +20,7 @@ export const UserPage = () => {
 	return (
 		<UserPageWrapper>
 			<PageHeader />
-			<UserList />
+			<Users />
 		</UserPageWrapper>
 	);
 };

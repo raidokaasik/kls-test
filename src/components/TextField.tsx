@@ -34,13 +34,16 @@ const CustomInput = styled.input(() => ({
 	},
 }));
 
-const FieldContainer = styled.div(() => ({
-	border: "1px solid #E2E8F0",
+const FieldContainer = styled.div(({ theme: { misc } }) => ({
+	border: misc.border,
 	position: "relative",
 	outline: 0,
 	borderRadius: "4px",
 	height: "40px",
 	width: "204px",
+	"&:hover": {
+		border: "1px solid #d3ddeb",
+	},
 	img: {
 		position: "absolute",
 		left: "12px",
