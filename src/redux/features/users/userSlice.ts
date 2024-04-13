@@ -49,10 +49,31 @@ export const userSlice = createSlice({
 		},
 		deleteSelectedUsers: (state) => {
 			if (state.selectedUsers.length > 0) {
-				state.users = state.users.filter(
-					(item: User) => !state.selectedUsers.includes(item.id)
-				);
+				if (state.selectedUsers.length === state.users.length) {
+					state.users = [];
+				} else {
+					state.users = state.users.filter(
+						(item: User) => !state.selectedUsers.includes(item.id)
+					);
+				}
+
 				state.selectedUsers = [];
+			}
+		},
+		sortUsers: (state, action: PayloadAction<Sort>) => {
+			if (state.users.length > 1) {
+				const sortedUsers = [...state.users] as User[];
+				sortedUsers.sort((a: User, b: User) => {
+					if (a.role < b.role) {
+						return action.payload === "ascended" ? -1 : 1;
+					}
+					if (a.role > b.role) {
+						return action.payload === "ascended" ? 1 : -1;
+					}
+					return 0;
+				});
+				state.sort.byRole = action.payload;
+				state.users = sortedUsers;
 			}
 		},
 	},
@@ -65,5 +86,6 @@ export const {
 	deleteSelectedUsers,
 	selectAllUsers,
 	deselectAllUsers,
+	sortUsers,
 } = userSlice.actions;
 export default userSlice.reducer;

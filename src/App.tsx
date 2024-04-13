@@ -1,7 +1,7 @@
 import { ThemeProvider } from "styled-components";
 import { UserPage } from "./pages/UserPage";
 import { theme } from "./theme";
-import { AppLayout } from "./components/AppLayout";
+import { AppLayout } from "./layout/AppLayout";
 
 function App() {
 	return (

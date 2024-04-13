@@ -3,7 +3,21 @@ import "styled-components";
 
 declare module "styled-components" {
 	export interface DefaultTheme {
+		typography: {
+			weight: {
+				regular: string;
+				medium: string;
+			};
+		};
+		misc: {
+			border: string;
+		};
 		palette: {
+			button: {
+				action: {
+					main: string;
+				};
+			};
 			common: {
 				white: string;
 			};
