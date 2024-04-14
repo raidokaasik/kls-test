@@ -1,23 +1,31 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../../types";
+import { handleUserSelection } from "./utils";
 
-type Sort = "ascended" | "descended";
+export type Sort = "ascended" | "descended";
+
+type SortPayload = {
+	by: "role" | "name";
+	order: "ascended" | "descended";
+};
 
 interface IUserState {
 	searchTerm: string;
 	users: User[];
-	selectedUsers: number[];
+	selectedUsers: number;
 	sort: {
-		byRole: Sort | "";
+		by: "role" | "name" | "";
+		order: "ascended" | "descended" | "";
 	};
 }
 
 const initialState: IUserState = {
 	searchTerm: "",
 	users: [],
-	selectedUsers: [],
+	selectedUsers: 0,
 	sort: {
-		byRole: "",
+		by: "",
+		order: "",
 	},
 };
 
@@ -32,48 +40,59 @@ export const userSlice = createSlice({
 			state.searchTerm = action.payload.toLowerCase();
 		},
 		selectUser: (state, action: PayloadAction<number>) => {
-			const selectedId = action.payload;
-			if (state.selectedUsers.includes(selectedId)) {
-				state.selectedUsers = state.selectedUsers.filter(
-					(id: number) => id !== selectedId
-				);
-			} else {
-				state.selectedUsers.push(selectedId);
+			state.users = handleUserSelection(state.users, true, action.payload);
+			state.selectedUsers += 1;
+		},
+		deselectUser: (state, action: PayloadAction<number>) => {
+			state.users = handleUserSelection(state.users, false, action.payload);
+			if (state.selectedUsers !== 0) {
+				state.selectedUsers -= 1;
 			}
 		},
 		selectAllUsers: (state) => {
-			state.selectedUsers = state.users.map((user: User) => user.id);
+			state.users = state.users.map((user: User) => ({
+				...user,
+				active: true,
+			}));
+			state.selectedUsers = state.users.length;
 		},
 		deselectAllUsers: (state) => {
-			state.selectedUsers = [];
+			state.users = state.users.map((user: User) => ({
+				...user,
+				active: false,
+			}));
+			state.selectedUsers = 0;
 		},
-		deleteSelectedUsers: (state) => {
-			if (state.selectedUsers.length > 0) {
-				if (state.selectedUsers.length === state.users.length) {
-					state.users = [];
-				} else {
-					state.users = state.users.filter(
-						(item: User) => !state.selectedUsers.includes(item.id)
-					);
-				}
-
-				state.selectedUsers = [];
+		deleteUserById: (state, action: PayloadAction<number>) => {
+			state.users = state.users.filter(
+				(user: User) => user.id !== action.payload
+			);
+			if (state.selectedUsers !== 0) {
+				state.selectedUsers -= 1;
 			}
 		},
-		sortUsers: (state, action: PayloadAction<Sort>) => {
+		deleteSelectedUsers: (state) => {
+			state.users = state.users.filter((user) => !user.active);
+			state.selectedUsers = 0;
+		},
+		sortBy: (state, action: PayloadAction<SortPayload>) => {
 			if (state.users.length > 1) {
 				const sortedUsers = [...state.users] as User[];
+				const by = action.payload.by;
+
 				sortedUsers.sort((a: User, b: User) => {
-					if (a.role < b.role) {
-						return action.payload === "ascended" ? -1 : 1;
+					if (a[by] < b[by]) {
+						return action.payload.order === "ascended" ? -1 : 1;
 					}
-					if (a.role > b.role) {
-						return action.payload === "ascended" ? 1 : -1;
+					if (a[by] > b[by]) {
+						return action.payload.order === "ascended" ? 1 : -1;
 					}
 					return 0;
 				});
-				state.sort.byRole = action.payload;
+
 				state.users = sortedUsers;
+				state.sort.by = action.payload.by;
+				state.sort.order = action.payload.order;
 			}
 		},
 	},
@@ -83,9 +102,12 @@ export const {
 	setSearchBy,
 	setUsers,
 	selectUser,
-	deleteSelectedUsers,
+	deselectUser,
 	selectAllUsers,
 	deselectAllUsers,
-	sortUsers,
+	sortBy,
+	deleteSelectedUsers,
+	deleteUserById,
 } = userSlice.actions;
+
 export default userSlice.reducer;

@@ -7,12 +7,18 @@ const nUsersSelected = (count: number) => {
 	return `${count} ${count === 1 ? "user" : "users"} selected`;
 };
 
+const uncheckAfterDeleteAll = () => {
+	const checkb: HTMLInputElement | null =
+		document.querySelector("#select-all-users");
+	if (checkb) {
+		checkb.checked = false;
+	}
+};
+
 export const ActionSection = () => {
 	const dispatch = useAppDispatch();
-	const selectedUsersCount = useAppSelector(
-		(state) => state.userState.selectedUsers.length
-	);
-	const selectedUsersP = nUsersSelected(selectedUsersCount);
+	const userCount = useAppSelector((state) => state.userState.selectedUsers);
+	const selectedUsersP = nUsersSelected(userCount);
 
 	return (
 		<ActionSectionContainer>
@@ -23,6 +29,7 @@ export const ActionSection = () => {
 					variant="delete"
 					onClick={() => {
 						dispatch(deleteSelectedUsers());
+						uncheckAfterDeleteAll();
 					}}
 				/>
 			</ButtonBox>
@@ -30,10 +37,10 @@ export const ActionSection = () => {
 	);
 };
 
-const ActionSectionContainer = styled.div(({}) => ({
+const ActionSectionContainer = styled.div(({ theme: { palette } }) => ({
 	width: "100%",
 	height: "32px",
-	background: "#fff",
+	background: palette.common.white,
 	display: "inline-flex",
 	alignItems: "center",
 	marginBottom: "24px",

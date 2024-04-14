@@ -12,7 +12,11 @@ export const UserPage = () => {
 	useEffect(() => {
 		getUsers().then((users) => {
 			if (users) {
-				dispatch(setUsers(users));
+				const restructuredUsers = users.map((user) => ({
+					...user,
+					active: false,
+				}));
+				dispatch(setUsers(restructuredUsers));
 			}
 		});
 	}, []);
