@@ -2,16 +2,34 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
 	selectAllUsers,
 	deselectAllUsers,
-	sortUsers,
+	sortBy,
 } from "../../redux/features/users/userSlice";
 import arrow from "../../assets/icons/arrow.svg";
 import { CheckBox } from "../../components/CheckBox";
 import styled from "styled-components";
+import { useState } from "react";
+
+type SortArrowProps = {
+	order: string;
+};
+const SortArrow = ({ order }: SortArrowProps) => {
+	return (
+		<img
+			src={arrow}
+			alt="sort-arrow"
+			style={{
+				transform: order === "descended" ? "rotate(180deg)" : "rotate(0)",
+			}}
+		/>
+	);
+};
 
 export const LabelSection = () => {
+	const [showPermissionSort, setShowPermissionSort] = useState<boolean>(false);
+	const [showUserSort, setShowUserSort] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const {
-		sort: { byRole },
+		sort: { order, by: sortyBy },
 	} = useAppSelector((state) => state.userState);
 
 	const selectAllHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,28 +39,41 @@ export const LabelSection = () => {
 		dispatch(deselectAllUsers());
 	};
 
-	const sortUsersHandler = () => {
-		dispatch(sortUsers(byRole === "ascended" ? "descended" : "ascended"));
+	const sortUsersHandler = (value: "role" | "name") => {
+		dispatch(
+			sortBy({
+				by: value,
+				order: order === "ascended" ? "descended" : "ascended",
+			})
+		);
 	};
+
+	const showPermissionSortArrow = showPermissionSort || sortyBy === "role";
+	const showUserSortArrow = showUserSort || sortyBy === "name";
 
 	return (
 		<LabelSectionContainer>
 			<SelectAllContainer>
 				<CheckBox id="select-all-users" onChange={selectAllHandler} />
-				<CustomLabel htmlFor="select-all-users">User</CustomLabel>
-			</SelectAllContainer>
-			<SortContainer>
-				<CustomLabel htmlFor="sort-arrow">Permission</CustomLabel>
-				<SortButton id="sort-arrow" onClick={sortUsersHandler}>
-					<img
-						src={arrow}
-						alt="sort-arrow"
-						style={{
-							transform: byRole === "ascended" ? "rotate(180deg)" : "rotate(0)",
-						}}
-					/>
+				<SortButton
+					id="sort-arrow-users"
+					onClick={() => sortUsersHandler("name")}
+					onMouseEnter={() => setShowUserSort(true)}
+					onMouseLeave={() => setShowUserSort(false)}
+				>
+					<CustomLabel>User</CustomLabel>
+					{showUserSortArrow && <SortArrow order={order} />}
 				</SortButton>
-			</SortContainer>
+			</SelectAllContainer>
+			<SortButton
+				id="sort-arrow-permission"
+				onClick={() => sortUsersHandler("role")}
+				onMouseEnter={() => setShowPermissionSort(true)}
+				onMouseLeave={() => setShowPermissionSort(false)}
+			>
+				<CustomLabel>Permission</CustomLabel>
+				{showPermissionSortArrow && <SortArrow order={order} />}
+			</SortButton>
 		</LabelSectionContainer>
 	);
 };
@@ -62,23 +93,19 @@ const SelectAllContainer = styled.div(() => ({
 	alignItems: "center",
 }));
 
-const SortContainer = styled.div(() => ({
-	width: "278px",
-	display: "inline-flex",
-	alignItems: "center",
-	gap: "4px",
-}));
-
 const SortButton = styled.button(() => ({
-	height: "12px",
-	width: "12px",
-	padding: "none",
-	border: "none",
+	height: "20px",
+	width: "fit-content",
+	padding: 0,
+	border: 0,
 	background: "none",
+	alignItems: "center",
+	display: "inline-flex",
+	gap: "4px",
 	cursor: "pointer",
 }));
 
-const CustomLabel = styled.label(({ theme: { palette, typography } }) => ({
+const CustomLabel = styled.p(({ theme: { palette, typography } }) => ({
 	color: palette.paragraph.label,
 	fontSize: "12px",
 	fontWeight: typography.weight.medium,
