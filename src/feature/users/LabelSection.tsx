@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
 	selectAllUsers,
 	deselectAllUsers,
-	sortBy,
-} from "../../redux/features/users/userSlice";
-import arrow from "../../assets/icons/arrow.svg";
-import { CheckBox } from "../../components/CheckBox";
+	sortUsers,
+} from "@/redux/features/users/userSlice";
+import arrow from "@/assets/icons/arrow.svg";
+import { CheckBox } from "@/components/CheckBox";
 import styled from "styled-components";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ export const LabelSection = () => {
 	const [showUserSort, setShowUserSort] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const {
-		sort: { order, by: sortyBy },
+		sort: { order: sortOrder, by: sortBy },
 	} = useAppSelector((state) => state.userState);
 
 	const selectAllHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,16 +40,20 @@ export const LabelSection = () => {
 	};
 
 	const sortUsersHandler = (value: "role" | "name") => {
+		const order = sortOrder[value] === "ascended" ? "descended" : "ascended";
 		dispatch(
-			sortBy({
+			sortUsers({
 				by: value,
-				order: order === "ascended" ? "descended" : "ascended",
+				order: {
+					...sortOrder,
+					[value]: order,
+				},
 			})
 		);
 	};
 
-	const showPermissionSortArrow = showPermissionSort || sortyBy === "role";
-	const showUserSortArrow = showUserSort || sortyBy === "name";
+	const showPermissionSortArrow = showPermissionSort || sortBy === "role";
+	const showUserSortArrow = showUserSort || sortBy === "name";
 
 	return (
 		<LabelSectionContainer>
@@ -62,7 +66,7 @@ export const LabelSection = () => {
 					onMouseLeave={() => setShowUserSort(false)}
 				>
 					<CustomLabel>User</CustomLabel>
-					{showUserSortArrow && <SortArrow order={order} />}
+					{showUserSortArrow && <SortArrow order={sortOrder.name} />}
 				</SortButton>
 			</SelectAllContainer>
 			<SortButton
@@ -72,7 +76,7 @@ export const LabelSection = () => {
 				onMouseLeave={() => setShowPermissionSort(false)}
 			>
 				<CustomLabel>Permission</CustomLabel>
-				{showPermissionSortArrow && <SortArrow order={order} />}
+				{showPermissionSortArrow && <SortArrow order={sortOrder.role} />}
 			</SortButton>
 		</LabelSectionContainer>
 	);

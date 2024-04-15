@@ -1,4 +1,4 @@
-import { User } from "../../types/index";
+import { User } from "@/types";
 
 export const getUsers = async (): Promise<User[]> => {
 	try {

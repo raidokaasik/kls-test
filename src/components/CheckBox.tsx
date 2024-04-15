@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import check from "../assets/icons/check.svg";
+import check from "@/assets/icons/check.svg";
 import { memo } from "react";
 
 interface CheckBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -19,7 +19,7 @@ export const CheckBox = memo(({ ...otherProps }: CheckBoxProps) => {
 	);
 });
 
-const CustomCheckBoxInput = styled.input(({}) => ({
+const CustomCheckBoxInput = styled.input({
 	position: "absolute",
 	opacity: 0,
 	cursor: "pointer",
@@ -32,7 +32,7 @@ const CustomCheckBoxInput = styled.input(({}) => ({
 			display: "block",
 		},
 	},
-}));
+});
 
 const CheckBoxContainer = styled.label(() => ({
 	position: "relative",

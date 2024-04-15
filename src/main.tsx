@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "@/App.tsx";
 import { Provider } from "react-redux";
-import { store } from "./redux/store.ts";
-import { GlobalStyle } from "./theme/index.ts";
+import { store } from "@/redux/store.ts";
+import { GlobalStyle } from "@/theme";
 
 async function initServiceWorker() {
 	const { serviceWorker } = await import("./mock/serviceWorker.ts");

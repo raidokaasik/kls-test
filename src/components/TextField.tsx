@@ -1,16 +1,9 @@
 import styled from "styled-components";
-import search from "../assets/icons/search.svg";
+import search from "@/assets/icons/search.svg";
 
-interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-	icon?: any;
-	iconPosition?: string;
-}
+interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export const TextField = ({
-	icon,
-	iconPosition,
-	...otherProps
-}: TextFieldProps) => {
+export const TextField = ({ ...otherProps }: TextFieldProps) => {
 	return (
 		<FieldContainer>
 			<img src={search} alt="search" />
@@ -19,7 +12,7 @@ export const TextField = ({
 	);
 };
 
-const CustomInput = styled.input(() => ({
+const CustomInput = styled.input({
 	border: 0,
 	outline: 0,
 	borderRadius: "inherit",
@@ -32,7 +25,7 @@ const CustomInput = styled.input(() => ({
 		fontWeight: "400",
 		color: "#A0AEC0",
 	},
-}));
+});
 
 const FieldContainer = styled.div(({ theme: { misc } }) => ({
 	border: misc.border,

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import editIcon from "../assets/icons/edit.svg";
-import deleteIcon from "../assets/icons/delete.svg";
+import editIcon from "@/assets/icons/edit.svg";
+import deleteIcon from "@/assets/icons/delete.svg";
 
 type ButtonVariants = "edit" | "delete";
 

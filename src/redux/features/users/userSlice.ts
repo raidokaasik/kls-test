@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../../types";
-import { handleUserSelection } from "./utils";
+import { User } from "@/types";
+import { setUserSelection, sortUsersBy } from "@/redux/features/users/utils";
 
 export type Sort = "ascended" | "descended";
-
-type SortPayload = {
+export type SortPayload = {
 	by: "role" | "name";
-	order: "ascended" | "descended";
+	order: {
+		name: Sort;
+		role: Sort;
+	};
 };
 
 interface IUserState {
@@ -15,7 +17,10 @@ interface IUserState {
 	selectedUsers: number;
 	sort: {
 		by: "role" | "name" | "";
-		order: "ascended" | "descended" | "";
+		order: {
+			name: Sort;
+			role: Sort;
+		};
 	};
 }
 
@@ -25,7 +30,10 @@ const initialState: IUserState = {
 	selectedUsers: 0,
 	sort: {
 		by: "",
-		order: "",
+		order: {
+			name: "descended",
+			role: "descended",
+		},
 	},
 };
 
@@ -40,11 +48,11 @@ export const userSlice = createSlice({
 			state.searchTerm = action.payload.toLowerCase();
 		},
 		selectUser: (state, action: PayloadAction<number>) => {
-			state.users = handleUserSelection(state.users, true, action.payload);
+			state.users = setUserSelection(state.users, true, action.payload);
 			state.selectedUsers += 1;
 		},
 		deselectUser: (state, action: PayloadAction<number>) => {
-			state.users = handleUserSelection(state.users, false, action.payload);
+			state.users = setUserSelection(state.users, false, action.payload);
 			if (state.selectedUsers !== 0) {
 				state.selectedUsers -= 1;
 			}
@@ -75,24 +83,14 @@ export const userSlice = createSlice({
 			state.users = state.users.filter((user) => !user.active);
 			state.selectedUsers = 0;
 		},
-		sortBy: (state, action: PayloadAction<SortPayload>) => {
+		sortUsers: (state, action: PayloadAction<SortPayload>) => {
 			if (state.users.length > 1) {
-				const sortedUsers = [...state.users] as User[];
-				const by = action.payload.by;
-
-				sortedUsers.sort((a: User, b: User) => {
-					if (a[by] < b[by]) {
-						return action.payload.order === "ascended" ? -1 : 1;
-					}
-					if (a[by] > b[by]) {
-						return action.payload.order === "ascended" ? 1 : -1;
-					}
-					return 0;
-				});
+				const sortedUsers = sortUsersBy(state.users, action.payload);
+				const { by, order } = action.payload;
 
 				state.users = sortedUsers;
-				state.sort.by = action.payload.by;
-				state.sort.order = action.payload.order;
+				state.sort.by = by;
+				state.sort.order = order;
 			}
 		},
 	},
@@ -105,7 +103,7 @@ export const {
 	deselectUser,
 	selectAllUsers,
 	deselectAllUsers,
-	sortBy,
+	sortUsers,
 	deleteSelectedUsers,
 	deleteUserById,
 } = userSlice.actions;

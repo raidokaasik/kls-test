@@ -1,7 +1,7 @@
-import { deleteSelectedUsers } from "../../redux/features/users/userSlice";
+import { deleteSelectedUsers } from "@/redux/features/users/userSlice";
 import { styled } from "styled-components";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { ActionButton } from "../../components/ActionButton";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { ActionButton } from "@/components/ActionButton";
 
 const nUsersSelected = (count: number) => {
 	return `${count} ${count === 1 ? "user" : "users"} selected`;
