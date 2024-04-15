@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { User } from "@/types";
 
 export function filteredUsers(users: User[], searchBy: string): User[] {
 	return users.filter((user: User) => {

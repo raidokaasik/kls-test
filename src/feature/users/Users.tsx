@@ -1,11 +1,11 @@
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import styled from "styled-components";
-import { UserRow } from "./UserRow";
-import { ActionSection } from "./ActionSection";
-import { filteredUsers } from "./utils";
-import { LabelSection } from "./LabelSection";
-import { User } from "../../types";
+import { UserRow } from "@/feature/users/UserRow";
+import { ActionSection } from "@/feature/users/ActionSection";
+import { filteredUsers } from "@/feature/users/utils";
+import { LabelSection } from "@/feature/users/LabelSection";
+import { User } from "@/types";
 
 const LIST_HEIGHT = 624;
 const LIST_WIDTH = 684;

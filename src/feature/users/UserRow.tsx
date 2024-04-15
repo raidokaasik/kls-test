@@ -1,15 +1,15 @@
-import { CheckBox } from "../../components/CheckBox";
+import { CheckBox } from "@/components/CheckBox";
 import {
 	deleteUserById,
 	deselectUser,
 	selectUser,
-} from "../../redux/features/users/userSlice";
-import { useAppDispatch } from "../../redux/hooks";
+} from "@/redux/features/users/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { styled } from "styled-components";
-import { User } from "../../types";
-import { Role, UserRole } from "./UserRole";
-import userPlaceholder from "../../assets/icons/user-placeholder.svg";
-import { ActionButton } from "../../components/ActionButton";
+import { User } from "@/types";
+import { Role, UserRole } from "@/feature/users/UserRole";
+import userPlaceholder from "@/assets/icons/user-placeholder.svg";
+import { ActionButton } from "@/components/ActionButton";
 import { useState } from "react";
 
 type UserRowProps = {
@@ -135,9 +135,7 @@ const UserEmail = styled.p(({ theme: { palette, typography } }) => ({
 }));
 
 const UserWrapper = styled.div({
-	"&:not(:last-child)": {
-		paddingBottom: "4px",
-	},
+	paddingBottom: "4px",
 });
 
 const UserCredentials = styled.div({
