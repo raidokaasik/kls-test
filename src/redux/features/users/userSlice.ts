@@ -72,12 +72,14 @@ export const userSlice = createSlice({
 			state.selectedUsers = 0;
 		},
 		deleteUserById: (state, action: PayloadAction<number>) => {
+			const user = state.users.find((user: User) => user.id === action.payload);
+			if (user?.active && state.selectedUsers !== 0) {
+				state.selectedUsers -= 1;
+			}
+
 			state.users = state.users.filter(
 				(user: User) => user.id !== action.payload
 			);
-			if (state.selectedUsers !== 0) {
-				state.selectedUsers -= 1;
-			}
 		},
 		deleteSelectedUsers: (state) => {
 			state.users = state.users.filter((user) => !user.active);
